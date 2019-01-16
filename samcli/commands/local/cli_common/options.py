@@ -121,6 +121,11 @@ def invoke_common_options(f):
                      envvar='SAM_FORCE_IMAGE_BUILD',
                      default=False),
 
+        click.option('--no-verify-ssl',
+                     is_flag=True,
+                     help='Do not verify SSL certificates when downloading layers locally',
+                     default=True),
+
     ]
 
     # Reverse the list to maintain ordering of options in help text printed with --help

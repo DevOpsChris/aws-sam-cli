@@ -57,7 +57,8 @@ class InvokeContext(object):
                  parameter_overrides=None,
                  layer_cache_basedir=None,
                  force_image_build=None,
-                 aws_region=None):
+                 aws_region=None,
+                 verifySSL=True):
         """
         Initialize the context
 
@@ -94,6 +95,8 @@ class InvokeContext(object):
             Whether or not to force build the image
         aws_region str
             AWS region to use
+        verifySSL bool
+            skip ssl verifiaction for downloading layers
         """
         self._template_file = template_file
         self._function_identifier = function_identifier
@@ -109,6 +112,7 @@ class InvokeContext(object):
         self._layer_cache_basedir = layer_cache_basedir
         self._force_image_build = force_image_build
         self._aws_region = aws_region
+        self._verifySSL = verifySSL
 
         self._template_dict = None
         self._function_provider = None
@@ -188,7 +192,7 @@ class InvokeContext(object):
             locally
         """
 
-        layer_downloader = LayerDownloader(self._layer_cache_basedir, self.get_cwd())
+        layer_downloader = LayerDownloader(self._layer_cache_basedir, self.get_cwd(), verifySSL=self._verifySSL)
         image_builder = LambdaImage(layer_downloader,
                                     self._skip_pull_image,
                                     self._force_image_build)
