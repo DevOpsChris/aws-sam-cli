@@ -119,12 +119,7 @@ def invoke_common_options(f):
                      is_flag=True,
                      help='Specify whether CLI should rebuild the image used for invoking functions with layers.',
                      envvar='SAM_FORCE_IMAGE_BUILD',
-                     default=False),
-
-        click.option('--no-verify-ssl',
-                     is_flag=True,
-                     help='Do not verify SSL certificates when downloading layers locally',
-                     default=True),
+                     default=False)
 
     ]
 

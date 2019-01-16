@@ -39,6 +39,10 @@ STDIN_FILE_NAME = "-"
               default=STDIN_FILE_NAME,  # Defaults to stdin
               help="JSON file containing event data passed to the Lambda function during invoke. If this option "
                    "is not specified, we will default to reading JSON from stdin")
+@click.option('--no-verify-ssl',
+            is_flag=True,
+            help='Do not verify SSL certificates when downloading layers locally',
+            default=True)
 @click.option("--no-event", is_flag=True, default=False, help="Invoke Function with an empty event")
 @invoke_common_options
 @cli_framework_options
