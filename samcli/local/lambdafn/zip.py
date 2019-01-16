@@ -91,7 +91,7 @@ def _set_permissions(zip_file_info, extracted_path):
     os.chmod(extracted_path, permission)
 
 
-def unzip_from_uri(uri, layer_zip_path, unzip_output_dir, progressbar_label):
+def unzip_from_uri(uri, layer_zip_path, unzip_output_dir, progressbar_label, verifySSL=True):
     """
     Download the LayerVersion Zip to the Layer Pkg Cache
 
@@ -107,7 +107,8 @@ def unzip_from_uri(uri, layer_zip_path, unzip_output_dir, progressbar_label):
         Label to use in the Progressbar
     """
     try:
-        get_request = requests.get(uri, stream=True)
+
+        get_request = requests.get(uri, stream=True, verify=verifySSL)
 
         with open(layer_zip_path, 'wb') as local_layer_file:
             file_length = int(get_request.headers['Content-length'])
