@@ -39,7 +39,8 @@ class Container(object):
                  env_vars=None,
                  docker_client=None,
                  container_opts=None,
-                 additional_volumes=None):
+                 additional_volumes=None,
+                 imported_env_vars=None):
         """
         Initializes the class with given configuration. This does not automatically create or run the container.
 
@@ -65,6 +66,7 @@ class Container(object):
         self._network_id = None
         self._container_opts = container_opts
         self._additional_volumes = additional_volumes
+        self._env_vars = imported_env_vars
 
         # Use the given Docker client or create new one
         self.docker_client = docker_client or docker.from_env()

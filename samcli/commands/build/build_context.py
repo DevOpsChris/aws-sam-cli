@@ -2,6 +2,7 @@
 Context object used by build command
 """
 
+import json
 import os
 import shutil
 
@@ -32,7 +33,8 @@ class BuildContext(object):
                  use_container=False,
                  parameter_overrides=None,
                  docker_network=None,
-                 skip_pull_image=False):
+                 skip_pull_image=False,
+                 env_vars_file=None):
 
         self._template_file = template_file
         self._base_dir = base_dir
@@ -43,7 +45,11 @@ class BuildContext(object):
         self._parameter_overrides = parameter_overrides
         self._docker_network = docker_network
         self._skip_pull_image = skip_pull_image
+<<<<<<< HEAD
         self._mode = mode
+=======
+        self._env_vars_file = env_vars_file
+>>>>>>> Pass in environment variables for docker build
 
         self._function_provider = None
         self._template_dict = None
@@ -56,6 +62,7 @@ class BuildContext(object):
         except ValueError as ex:
             raise UserException(str(ex))
 
+        self._env_vars_value    = self._get_env_vars_value(self._env_vars_file)
         self._function_provider = SamFunctionProvider(self._template_dict, self._parameter_overrides)
 
         if not self._base_dir:
@@ -86,6 +93,30 @@ class BuildContext(object):
         # ensure path resolving is done after creation: https://bugs.python.org/issue32434
         return str(build_path.resolve())
 
+    @staticmethod
+    def _get_env_vars_value(filename):
+        """
+        If the user provided a file containing values of environment variables, this method will read the file and
+        return its value
+
+        :param string filename: Path to file containing environment variable values
+        :return dict: Value of environment variables, if provided. None otherwise
+        :raises InvokeContextException: If the file was not found or not a valid JSON
+        """
+        if not filename:
+            return None
+
+        # Try to read the file and parse it as JSON
+        try:
+
+            with open(filename, 'r') as fp:
+                return json.load(fp)
+
+        except Exception as ex:
+            raise InvokeContextException("Could not read environment variables overrides from file {}: {}".format(
+                                         filename,
+                                         str(ex)))
+
     @property
     def container_manager(self):
         return self._container_manager
@@ -101,6 +132,10 @@ class BuildContext(object):
     @property
     def build_dir(self):
         return self._build_dir
+
+    @property
+    def env_vars(self):
+        return self._env_vars_value
 
     @property
     def base_dir(self):

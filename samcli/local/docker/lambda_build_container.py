@@ -37,7 +37,8 @@ class LambdaBuildContainer(Container):
                  options=None,
                  executable_search_paths=None,
                  log_level=None,
-                 mode=None):
+                 mode=None,
+                 imported_env_vars={}):
 
         abs_manifest_path = pathlib.Path(manifest_path).resolve()
         manifest_file_name = abs_manifest_path.name
@@ -84,11 +85,12 @@ class LambdaBuildContainer(Container):
             }
         }
 
-        env_vars = None
+        env_vars = dict()
         if log_level:
             env_vars = {
                 "LAMBDA_BUILDERS_LOG_LEVEL": log_level
             }
+        env_vars.update(imported_env_vars)
 
         super(LambdaBuildContainer, self).__init__(
             image,
@@ -97,7 +99,7 @@ class LambdaBuildContainer(Container):
             source_dir,
             additional_volumes=additional_volumes,
             entrypoint=entry,
-            env_vars=env_vars)
+            imported_env_vars=env_vars)
 
     @property
     def executable_name(self):
