@@ -66,7 +66,7 @@ class Container(object):
         self._network_id = None
         self._container_opts = container_opts
         self._additional_volumes = additional_volumes
-        self._env_vars = imported_env_vars
+        self._my_env_vars = imported_env_vars
 
         # Use the given Docker client or create new one
         self.docker_client = docker_client or docker.from_env()
