@@ -219,7 +219,11 @@ class LambdaImage(object):
         """
         dockerfile_content = "FROM {}\n".format(base_image)
 
+        if layers:
+            dockerfile_content = dockerfile_content + "USER root\n"
         for layer in layers:
             dockerfile_content = dockerfile_content + \
-                                 "ADD --chown=sbx_user1051:495 {} {}\n".format(layer.name, LambdaImage._LAYERS_DIR)
+                                 'ADD {0} {1}\nRUN ["chown", "-R", "sbx_user1051:495", "{1}"]\n'.format(layer.name, LambdaImage._LAYERS_DIR)
+        if layers:
+            dockerfile_content = dockerfile_content + "USER sbx_user1051\n"
         return dockerfile_content
