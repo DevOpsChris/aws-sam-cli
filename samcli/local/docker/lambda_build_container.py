@@ -90,7 +90,8 @@ class LambdaBuildContainer(Container):
             env_vars = {
                 "LAMBDA_BUILDERS_LOG_LEVEL": log_level
             }
-        env_vars.update(imported_env_vars)
+        if imported_env_vars:
+            env_vars.update(imported_env_vars)
 
         super(LambdaBuildContainer, self).__init__(
             image,

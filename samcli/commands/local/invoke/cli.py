@@ -39,10 +39,6 @@ STDIN_FILE_NAME = "-"
               default=STDIN_FILE_NAME,  # Defaults to stdin
               help="JSON file containing event data passed to the Lambda function during invoke. If this option "
                    "is not specified, we will default to reading JSON from stdin")
-@click.option('--no-verify-ssl',
-            is_flag=True,
-            help='Do not verify SSL certificates when downloading layers locally',
-            default=True)
 @click.option("--no-event", is_flag=True, default=False, help="Invoke Function with an empty event")
 @invoke_common_options
 @cli_framework_options
@@ -50,19 +46,19 @@ STDIN_FILE_NAME = "-"
 @click.argument('function_identifier', required=False)
 @pass_context  # pylint: disable=R0914
 def cli(ctx, function_identifier, template, event, no_event, env_vars, debug_port, debug_args, debugger_path,
-        docker_volume_basedir, docker_network, log_file, layer_cache_basedir, skip_pull_image, force_image_build, no_verify_ssl,
+        docker_volume_basedir, docker_network, log_file, layer_cache_basedir, skip_pull_image, force_image_build,
         parameter_overrides):
 
     # All logic must be implemented in the ``do_cli`` method. This helps with easy unit testing
 
     do_cli(ctx, function_identifier, template, event, no_event, env_vars, debug_port, debug_args, debugger_path,
-           docker_volume_basedir, docker_network, log_file, layer_cache_basedir, skip_pull_image, force_image_build, no_verify_ssl,
+           docker_volume_basedir, docker_network, log_file, layer_cache_basedir, skip_pull_image, force_image_build,
            parameter_overrides)  # pragma: no cover
 
 
 def do_cli(ctx, function_identifier, template, event, no_event, env_vars, debug_port,  # pylint: disable=R0914
            debug_args, debugger_path, docker_volume_basedir, docker_network, log_file, layer_cache_basedir,
-           skip_pull_image, force_image_build, no_verify_ssl, parameter_overrides):
+           skip_pull_image, force_image_build, parameter_overrides):
     """
     Implementation of the ``cli`` method, just separated out for unit testing purposes
     """
@@ -94,8 +90,7 @@ def do_cli(ctx, function_identifier, template, event, no_event, env_vars, debug_
                            parameter_overrides=parameter_overrides,
                            layer_cache_basedir=layer_cache_basedir,
                            force_image_build=force_image_build,
-                           aws_region=ctx.region,
-                           verifySSL=no_verify_ssl) as context:
+                           aws_region=ctx.region) as context:
 
             # Invoke the function
             context.local_lambda_runner.invoke(context.function_name,

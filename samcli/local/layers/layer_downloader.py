@@ -22,7 +22,7 @@ LOG = logging.getLogger(__name__)
 
 class LayerDownloader(object):
 
-    def __init__(self, layer_cache, cwd, lambda_client=None, verifySSL=True):
+    def __init__(self, layer_cache, cwd, lambda_client=None):
         """
 
         Parameters
@@ -36,8 +36,7 @@ class LayerDownloader(object):
         """
         self._layer_cache = layer_cache
         self.cwd = cwd
-        self.lambda_client = lambda_client or boto3.client('lambda', verify=False)
-        self.verifySSL = verifySSL
+        self.lambda_client = lambda_client or boto3.client('lambda')
 
     @property
     def layer_cache(self):
@@ -109,8 +108,7 @@ class LayerDownloader(object):
         unzip_from_uri(layer_zip_uri,
                        layer_zip_path,
                        unzip_output_dir=layer.codeuri,
-                       progressbar_label='Downloading {}'.format(layer.layer_arn),
-                       verifySSL=self.verifySSL)
+                       progressbar_label='Downloading {}'.format(layer.layer_arn))
 
         return layer
 

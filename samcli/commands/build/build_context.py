@@ -45,11 +45,8 @@ class BuildContext(object):
         self._parameter_overrides = parameter_overrides
         self._docker_network = docker_network
         self._skip_pull_image = skip_pull_image
-<<<<<<< HEAD
         self._mode = mode
-=======
         self._env_vars_file = env_vars_file
->>>>>>> Pass in environment variables for docker build
 
         self._function_provider = None
         self._template_dict = None
